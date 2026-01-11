@@ -398,9 +398,9 @@ export default function ImageResizer() {
         <div className="min-h-screen">
             {/* Animated Background */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--primary)] opacity-5 rounded-full blur-[100px] animate-float" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--secondary)] opacity-5 rounded-full blur-[100px] animate-float" style={{ animationDelay: '-1.5s' }} />
-                <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[var(--accent)] opacity-5 rounded-full blur-[80px] animate-float" style={{ animationDelay: '-3s' }} />
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--primary)] opacity-10 rounded-full blur-[120px] animate-float" />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--secondary)] opacity-10 rounded-full blur-[120px] animate-float" style={{ animationDelay: '-1.5s' }} />
+                <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[var(--accent)] opacity-8 rounded-full blur-[100px] animate-float" style={{ animationDelay: '-3s' }} />
             </div>
 
             <div className="relative z-10 p-4 md:p-6 lg:p-8">
@@ -995,14 +995,14 @@ export default function ImageResizer() {
             <AnimatePresence>
                 {showCompare && selectedImage && selectedImage.status === 'completed' && (
                     <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setShowCompare(false)}
                     >
                         <motion.div
-                            className="relative w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden bg-[var(--surface)] p-2"
+                            className="relative w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden bg-white shadow-2xl p-2"
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
@@ -1060,14 +1060,14 @@ export default function ImageResizer() {
             <AnimatePresence>
                 {showZipModal && (
                     <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setShowZipModal(false)}
                     >
                         <motion.div
-                            className="relative w-full max-w-md rounded-3xl overflow-hidden bg-[var(--surface)] p-6"
+                            className="relative w-full max-w-md rounded-3xl overflow-hidden bg-white shadow-2xl p-6"
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
