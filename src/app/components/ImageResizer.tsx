@@ -6,10 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 import {
-    MdPhotoSizeSelectActual,
     MdCameraRoll,
     MdImage,
-    MdVideoLibrary,
     MdMonitor,
     MdTv,
     MdSettings,
@@ -21,7 +19,6 @@ import {
     MdDeleteSweep,
     MdRocketLaunch,
     MdArchive,
-    MdStraighten,
     MdAspectRatio,
     MdLock,
     MdAutoAwesome,
@@ -29,11 +26,9 @@ import {
     MdInfo,
     MdRotateRight,
     MdRotateLeft,
-    MdZoomIn,
     MdClose,
     MdCompareArrows,
     MdSpeed,
-    MdStorage,
     MdFlashOn,
     MdTune,
     MdGridView,
@@ -85,30 +80,30 @@ const containerVariants = {
             staggerChildren: 0.1
         }
     }
-};
+} as const;
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, ease: "easeOut" }
+        transition: { duration: 0.5, ease: "easeOut" as const }
     }
-};
+} as const;
 
 const cardVariants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
         opacity: 1,
         scale: 1,
-        transition: { duration: 0.4, ease: "easeOut" }
+        transition: { duration: 0.4, ease: "easeOut" as const }
     },
     exit: {
         opacity: 0,
         scale: 0.9,
         transition: { duration: 0.2 }
     }
-};
+} as const;
 
 export default function ImageResizer() {
     const [images, setImages] = useState<ImageFile[]>([]);
@@ -127,7 +122,18 @@ export default function ImageResizer() {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [showZipModal, setShowZipModal] = useState(false);
     const [zipFileName, setZipFileName] = useState('resized-images');
-    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Helper function to get image dimensions
+    const getImageDimensions = useCallback((file: File): Promise<{ width: number; height: number }> => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                resolve({ width: img.width, height: img.height });
+                URL.revokeObjectURL(img.src);
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    }, []);
 
     // Dropzone configuration
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -156,7 +162,7 @@ export default function ImageResizer() {
         );
 
         setImages(prev => [...prev, ...newImages]);
-    }, [resizeOptions]);
+    }, [resizeOptions, getImageDimensions]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -187,17 +193,8 @@ export default function ImageResizer() {
                 })
             );
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resizeOptions.width, resizeOptions.height, resizeOptions.maintainAspectRatio]);
-
-    const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                resolve({ width: img.width, height: img.height });
-            };
-            img.src = URL.createObjectURL(file);
-        });
-    };
 
     const rotateImage = (id: string, direction: 'left' | 'right') => {
         setImages(prev =>
@@ -301,7 +298,7 @@ export default function ImageResizer() {
                         } : img
                     )
                 );
-            } catch (error) {
+            } catch {
                 setImages(prev =>
                     prev.map(img =>
                         img.id === image.id ? { ...img, status: 'error' as const } : img
@@ -581,7 +578,7 @@ export default function ImageResizer() {
                                         </label>
                                         <select
                                             value={resizeOptions.format}
-                                            onChange={(e) => setResizeOptions(prev => ({ ...prev, format: e.target.value as any }))}
+                                            onChange={(e) => setResizeOptions(prev => ({ ...prev, format: e.target.value as 'jpeg' | 'png' | 'webp' }))}
                                             className="w-full"
                                         >
                                             <option value="jpeg">JPEG - Nhỏ gọn</option>
@@ -804,7 +801,7 @@ export default function ImageResizer() {
                                     layout
                                 >
                                     <AnimatePresence mode="popLayout">
-                                        {images.map((image, index) => (
+                                        {images.map((image) => (
                                             <motion.div
                                                 key={image.id}
                                                 layout
